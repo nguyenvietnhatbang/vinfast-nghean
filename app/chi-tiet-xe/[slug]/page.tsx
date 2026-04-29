@@ -207,6 +207,28 @@ export default function CarDetail() {
                    return <img key={idx} src={block.content} className="w-full max-w-5xl mx-auto border border-gray-200 shadow-sm" />;
                  } else if (block.block_type === 'text') {
                    return <div key={idx} className="w-full max-w-5xl mx-auto text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">{block.content}</div>;
+                 } else if (block.block_type === 'video') {
+                   // Extract video ID and convert to embed URL if needed
+                   let videoUrl = block.content;
+                   if (videoUrl.includes('youtube.com/watch?v=')) {
+                     videoUrl = videoUrl.replace('watch?v=', 'embed/');
+                   } else if (videoUrl.includes('youtu.be/')) {
+                     videoUrl = videoUrl.replace('youtu.be/', 'youtube.com/embed/');
+                   }
+                   
+                   return (
+                     <div key={idx} className="w-full max-w-5xl mx-auto aspect-video border border-gray-200 shadow-sm overflow-hidden bg-black">
+                       <iframe
+                         width="100%"
+                         height="100%"
+                         src={videoUrl}
+                         title="YouTube video player"
+                         frameBorder="0"
+                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                         allowFullScreen
+                       ></iframe>
+                     </div>
+                   );
                  }
                  return null;
                })}

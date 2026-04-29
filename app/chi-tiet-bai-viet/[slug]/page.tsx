@@ -121,6 +121,26 @@ export default function ArticleDetail() {
                 {blocks.map((block, idx) => {
                     if (block.block_type === 'image') {
                         return <img key={idx} src={block.content} alt={postData?.title} className="w-full h-auto border border-gray-200 my-8 shadow-sm" />;
+                    } else if (block.block_type === 'video') {
+                        let videoUrl = block.content;
+                        if (videoUrl.includes('youtube.com/watch?v=')) {
+                          videoUrl = videoUrl.replace('watch?v=', 'embed/');
+                        } else if (videoUrl.includes('youtu.be/')) {
+                          videoUrl = videoUrl.replace('youtu.be/', 'youtube.com/embed/');
+                        }
+                        return (
+                          <div key={idx} className="w-full aspect-video border border-gray-200 my-8 shadow-sm overflow-hidden bg-black">
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              src={videoUrl}
+                              title="YouTube video player"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                            ></iframe>
+                          </div>
+                        );
                     } else {
                         return <div key={idx} className="whitespace-pre-wrap leading-relaxed text-lg">{block.content}</div>;
                     }
