@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { Phone, Mail, MapPin, ChevronRight, Menu, Calendar, User, ChevronDown, MessageCircle } from "lucide-react";
+import { Phone, Mail, ChevronRight, Calendar, User, MessageCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { PublicPageShell } from "@/components/public/public-page-shell";
+import { usePublicSiteCars } from "@/components/public/public-site-cars-context";
 
 export default function PromotionsPage() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { settings } = usePublicSiteCars();
   const [posts, setPosts] = useState<any[]>([]);
   const [latestPosts, setLatestPosts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,58 +45,19 @@ export default function PromotionsPage() {
       }
     };
     fetchData();
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8102e]"></div></div>;
+  if (isLoading)
+    return (
+      <PublicPageShell>
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8102e]" />
+        </div>
+      </PublicPageShell>
+    );
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
-      {/* Header */}
-      <header className="w-full bg-white border-b border-gray-300 sticky top-0 z-50 shadow-md transition-all duration-300">
-        <div className="max-w-[1200px] mx-auto px-4">
-          <div className={`flex justify-end items-center py-2 text-xs text-gray-700 gap-6 border-b border-gray-200 hidden md:flex transition-all duration-300 overflow-hidden ${isScrolled ? 'h-0 py-0 border-none opacity-0' : 'h-10'}`}>
-            <a href="https://zalo.me/0961194881" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-bold hover:opacity-80 transition-opacity">
-              <Phone size={14} className="text-[#c8102e] fill-current" />
-              <span className="text-[#c8102e]">0961.194.881</span>
-            </a>
-            <div className="flex items-center gap-1.5">
-              <Mail size={14} className="text-[#c8102e]" />
-              <span>vinfastnghean1@gmail.com</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="bg-[#c8102e] text-white px-1.5 py-0.5 text-[11px] font-bold">FB</div>
-              <div className="bg-[#c8102e] text-white px-1.5 py-0.5 text-[11px] font-bold">YT</div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <Link href="/" className="flex items-center gap-4">
-              <div className="relative w-12 h-12">
-                <Image src="/logo/imgi_1_r3.png" fill alt="Vinfast Logo" className="object-contain" />
-              </div>
-              <div className="flex flex-col justify-center">
-                <h1 className="text-2xl font-bold uppercase tracking-wide text-black">Vinfast Hoàn</h1>
-              </div>
-            </Link>
-            <div className="md:hidden">
-               <Menu size={28} className="text-black" />
-            </div>
-            <nav className="hidden md:flex items-center gap-8 text-[14px] font-bold text-black uppercase tracking-wider">
-              <Link href="/" className="hover:text-[#c8102e] transition-colors py-2">Trang chủ</Link>
-              <Link href="/su-kien" className="hover:text-[#c8102e] transition-colors py-2">Sự kiện</Link>
-              <Link href="/dang-ky-lai-thu" className="hover:text-[#c8102e] transition-colors py-2">Đăng ký lái thử</Link>
-              <Link href="/uu-dai" className="text-[#c8102e] hover:text-[#c8102e] transition-colors py-2">Ưu đãi</Link>
-              <Link href="/brochure" className="hover:text-[#c8102e] transition-colors py-2">Brochure</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+    <PublicPageShell>
       {/* Banner */}
       <div className="relative w-full h-[200px] sm:h-[300px] overflow-hidden bg-black flex flex-col justify-center items-center md:items-start text-white">
         <img src="/baner/imgi_6_1.jpg" alt="Banner" className="absolute top-0 left-0 w-full h-full object-cover opacity-50" />
@@ -152,13 +114,13 @@ export default function PromotionsPage() {
                    </div>
                    <div className="space-y-2 mt-1">
                      <div className="flex items-center gap-2 font-bold text-lg text-[#c8102e]">
-                       <Phone size={16} className="fill-current" /> <a href="https://zalo.me/0961194881">0961.194.881</a>
+                       <Phone size={16} className="fill-current" /> <a href={settings.zalo_link || `https://zalo.me/${(settings.phone_number || '0961194881').replace(/\./g, '')}`}>{settings.phone_number || "0961.194.881"}</a>
                      </div>
                      <div className="flex items-center gap-2 text-gray-900 text-[13px] font-bold">
-                       <span className="bg-blue-500 text-white rounded-full p-0.5"><MessageCircle size={10} /></span> Zalo: 0961.194.881
+                       <span className="bg-blue-500 text-white rounded-full p-0.5"><MessageCircle size={10} /></span> Zalo: {settings.phone_number || "0961.194.881"}
                      </div>
                      <div className="flex items-center gap-2 text-gray-900 text-[13px] font-bold">
-                       <Mail size={14} /> vinfastnghean1@gmail.com
+                       <Mail size={14} /> {settings.email || "vinfastnghean1@gmail.com"}
                      </div>
                    </div>
                  </div>
@@ -215,12 +177,6 @@ export default function PromotionsPage() {
            </div>
         </div>
       </main>
-
-      <footer className="bg-[#1a1a1a] text-gray-300 py-16 border-t-[5px] border-[#c8102e]">
-         <div className="max-w-[1200px] mx-auto px-4 text-center">
-            <p>&copy; 2024 VinFast Hoàn. All rights reserved.</p>
-         </div>
-      </footer>
-    </div>
+    </PublicPageShell>
   );
 }

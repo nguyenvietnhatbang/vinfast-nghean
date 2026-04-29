@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Car, LogOut, FileText, Mail } from 'lucide-react';
+import { LayoutDashboard, Car, LogOut, FileText, Mail, Settings } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -13,6 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Quản lý bài viết', href: '/admin/posts', icon: FileText },
     { name: 'Quản lý liên hệ', href: '/admin/registrations', icon: Mail },
     { name: 'Quản lý Brochure', href: '/admin/brochures', icon: FileText },
+    { name: 'Cấu hình Website', href: '/admin/settings', icon: Settings },
   ];
 
   return (

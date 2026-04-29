@@ -1,19 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import { Phone, Mail, MapPin, ChevronRight, Menu, X, ChevronDown } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { PublicPageShell } from "@/components/public/public-page-shell";
+import { usePublicSiteCars } from "@/components/public/public-site-cars-context";
 
 export default function CarDetail() {
   const { slug } = useParams();
-  const router = useRouter();
+  const { settings } = usePublicSiteCars();
 
   const [selectedColor, setSelectedColor] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Data states
@@ -21,7 +21,6 @@ export default function CarDetail() {
   const [colors, setColors] = useState<any[]>([]);
   const [detailBlocks, setDetailBlocks] = useState<any[]>([]);
   const [specs, setSpecs] = useState<any[]>([]);
-  const [allCars, setAllCars] = useState<any[]>([]); // Cho menu "XE NỔI BẬT"
 
   // Lead Modal states
   const [leadForm, setLeadForm] = useState({
@@ -90,10 +89,6 @@ export default function CarDetail() {
           setSpecs(specData);
         }
 
-        // Fetch all cars cho menu
-        const { data: all } = await supabase.from('cars').select('name, slug');
-        if (all) setAllCars(all);
-
       } catch (error) {
         console.error("Lỗi fetch chi tiết xe:", error);
         loadStaticData();
@@ -103,12 +98,6 @@ export default function CarDetail() {
     };
 
     fetchCarDetail();
-    
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, [slug]);
 
   const loadStaticData = () => {
@@ -131,68 +120,21 @@ export default function CarDetail() {
     setSpecs([
       { image_url: '/chi tiết xe/thông số xe/imgi_19_TSKT-VF-3-3-scaled.jpg' }
     ]);
-    setAllCars([
-      { name: 'VF 3', slug: 'vf-3' }, { name: 'VF 5', slug: 'vf-5' }, { name: 'VF 6', slug: 'vf-6' }
-    ]);
     setIsLoading(false);
   };
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8102e]"></div></div>;
+    return (
+      <PublicPageShell>
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c8102e]" />
+        </div>
+      </PublicPageShell>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
-      {/* Header */}
-      <header className="w-full bg-white border-b border-gray-300 sticky top-0 z-50 shadow-md transition-all duration-300">
-        <div className="max-w-[1200px] mx-auto px-4">
-          <div className={`flex justify-end items-center py-2 text-xs text-gray-700 gap-6 border-b border-gray-200 hidden md:flex transition-all duration-300 overflow-hidden ${isScrolled ? 'h-0 py-0 border-none opacity-0' : 'h-10'}`}>
-            <a href="https://zalo.me/0961194881" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-bold hover:opacity-80 transition-opacity">
-              <Phone size={14} className="text-[#c8102e] fill-current" />
-              <span className="text-[#c8102e]">0961.194.881</span>
-            </a>
-            <div className="flex items-center gap-1.5">
-              <Mail size={14} className="text-[#c8102e]" />
-              <span>vinfastnghean1@gmail.com</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="bg-[#c8102e] text-white px-1.5 py-0.5 text-[11px] font-bold">FB</div>
-              <div className="bg-[#c8102e] text-white px-1.5 py-0.5 text-[11px] font-bold">YT</div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <Link href="/" className="flex items-center gap-4">
-              <div className="relative w-12 h-12">
-                <Image src="/logo/imgi_1_r3.png" fill alt="Vinfast Logo" className="object-contain" />
-              </div>
-              <div className="flex flex-col justify-center">
-                <h1 className="text-2xl font-bold uppercase tracking-wide text-black">Vinfast Hoàn</h1>
-              </div>
-            </Link>
-            <div className="md:hidden">
-               <Menu size={28} className="text-black" />
-            </div>
-            <nav className="hidden md:flex items-center gap-8 text-[14px] font-bold text-black uppercase tracking-wider">
-              <Link href="/" className="hover:text-[#c8102e] transition-colors py-2">Trang chủ</Link>
-              
-              <div className="group relative py-2 cursor-pointer">
-                <span className="hover:text-[#c8102e] transition-colors flex items-center gap-1">Sản phẩm</span>
-                <div className="absolute top-full left-0 bg-[#e08e0b] min-w-[220px] shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col">
-                  {allCars.map(c => (
-                    <Link key={c.slug} href={`/chi-tiet-xe/${c.slug}`} className="text-white hover:bg-white/20 px-4 py-3 border-b border-white/10 text-[14px] font-normal">{c.name}</Link>
-                  ))}
-                </div>
-              </div>
-
-              <Link href="/su-kien" className="hover:text-[#c8102e] transition-colors py-2">Sự kiện</Link>
-              <Link href="/dang-ky-lai-thu" className="hover:text-[#c8102e] transition-colors py-2">Đăng ký lái thử</Link>
-              <Link href="/su-kien" className="hover:text-[#c8102e] transition-colors py-2">Ưu đãi</Link>
-              <Link href="/brochure" className="hover:text-[#c8102e] transition-colors py-2">Brochure</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-      
+    <PublicPageShell>
       {/* Content */}
       <main className="max-w-[1200px] mx-auto px-4 py-16">
         
@@ -231,7 +173,7 @@ export default function CarDetail() {
               <button onClick={() => setShowModal(true)} className="bg-[#c8102e] border-2 border-[#c8102e] text-white px-8 py-3.5 font-bold uppercase text-[15px] hover:bg-red-800 hover:border-red-800 transition">
                 Nhận thông tin tư vấn
               </button>
-              <a href="https://zalo.me/0961194881" target="_blank" rel="noopener noreferrer" className="bg-white border-2 border-black text-black px-8 py-3.5 font-bold uppercase text-[15px] hover:bg-black hover:text-white transition flex items-center justify-center gap-2">
+              <a href={settings.zalo_link || `https://zalo.me/${(settings.phone_number || '0961194881').replace(/\./g, '')}`} target="_blank" rel="noopener noreferrer" className="bg-white border-2 border-black text-black px-8 py-3.5 font-bold uppercase text-[15px] hover:bg-black hover:text-white transition flex items-center justify-center gap-2">
                 <Phone size={18} /> Liên hệ Zalo
               </a>
             </div>
@@ -272,84 +214,7 @@ export default function CarDetail() {
           </div>
         )}
       </main>
-      
-      {/* Footer */}
-      <footer className="bg-[#1a1a1a] text-gray-300 py-16 border-t-[5px] border-[#c8102e]">
-        <div className="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
-          
-          {/* Col 1 */}
-          <div>
-            <h3 className="text-white font-bold text-[18px] uppercase mb-6 flex items-center gap-2">
-              <span className="w-3 h-3 bg-gray-500"></span>
-              LIÊN HỆ VỚI CHÚNG TÔI
-            </h3>
-            <p className="font-bold text-white mb-4 text-[16px]">Đại lý Ô Tô VinFast Hoàn</p>
-            <ul className="space-y-4 text-[15px]">
-              <li className="flex items-start gap-3">
-                <MapPin size={18} className="text-gray-400 mt-1" />
-                <span>Tầng 1, Chung Cư A1, Phường Quang Trung, TP. Vinh, Nghệ An</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={18} className="text-gray-400" />
-                <span>Hotline: <a href="https://zalo.me/0961194881" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#c8102e] transition-colors font-bold">0961.194.881</a></span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={18} className="text-gray-400" />
-                <span>vinfastnghean1@gmail.com</span>
-              </li>
-            </ul>
-          </div>
 
-          {/* Col 2 */}
-          <div>
-            <h3 className="text-white font-bold text-[18px] uppercase mb-6 flex items-center gap-2">
-              <span className="w-3 h-3 bg-gray-500"></span>
-              XE NỔI BẬT
-            </h3>
-            <ul className="grid grid-cols-2 gap-y-3 gap-x-4 text-[15px]">
-              {allCars.map((car) => (
-                <li key={car.slug} className="flex items-center gap-2 hover:text-[#c8102e] cursor-pointer transition-colors">
-                  <Link href={`/chi-tiet-xe/${car.slug}`} className="flex items-center gap-2 w-full">
-                    <ChevronRight size={14} className="text-gray-500" /> {car.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3 */}
-          <div>
-            <h3 className="text-white font-bold text-[18px] uppercase mb-6 flex items-center gap-2">
-              <span className="w-3 h-3 bg-gray-500"></span>
-              HỖ TRỢ MUA HÀNG
-            </h3>
-            <ul className="space-y-3 text-[15px]">
-              <li className="border-b border-gray-700 pb-2">
-                <Link href="/brochure" className="flex items-center gap-2 hover:text-[#c8102e] transition-colors">
-                  <ChevronRight size={14} className="text-gray-500" /> Tải Brochure
-                </Link>
-              </li>
-              {['Trả góp ưu đãi', 'Đăng ký lái thử', 'Chính sách bảo hành'].map((item) => (
-                <li key={item} className="flex items-center gap-2 hover:text-[#c8102e] cursor-pointer transition-colors border-b border-gray-700 pb-2">
-                  <ChevronRight size={14} className="text-gray-500" /> {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-        </div>
-      </footer>
-
-      {/* Floating Action Button */}
-      <a href="https://zalo.me/0961194881" target="_blank" rel="noopener noreferrer" className="fixed bottom-6 left-6 z-50 flex items-center group cursor-pointer">
-        <div className="bg-[#c8102e] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-10">
-          <Phone size={24} className="fill-current" />
-        </div>
-        <div className="bg-[#c8102e] text-white font-bold px-4 py-2 rounded-r-full -ml-4 pr-6 shadow-lg transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-          0961.194.881
-        </div>
-      </a>
-      
       {/* Bottom right support button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button className="bg-black text-white px-5 py-2.5 shadow-lg font-bold flex items-center gap-2 hover:bg-[#333] transition-colors border border-gray-700 uppercase text-sm">
@@ -447,6 +312,6 @@ export default function CarDetail() {
           </div>
         </div>
       )}
-    </div>
+    </PublicPageShell>
   )
 }
