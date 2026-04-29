@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "VinFast Hoàn - Cung cấp các dòng xe điện VinFast chính hãng: VF 3, VF 5, VF 6, VF 7, VF 8, VF 9. Dịch vụ bảo hành, bảo dưỡng chuyên nghiệp.",
 };
 
+import { PublicSiteCarsProvider } from "@/components/public/public-site-cars-context";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +29,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <PublicSiteCarsProvider>{children}</PublicSiteCarsProvider>
+      </body>
     </html>
   );
 }

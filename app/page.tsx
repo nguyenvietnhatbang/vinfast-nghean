@@ -1,10 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
 import { PublicPageShell } from "@/components/public/public-page-shell";
 import { usePublicSiteCars } from "@/components/public/public-site-cars-context";
+import { supabase } from "@/lib/supabase";
 
 function HomeContent() {
   const banners = [
@@ -15,7 +16,27 @@ function HomeContent() {
   ];
 
   const [currentBanner, setCurrentBanner] = useState(0);
-  const { currentCars, serviceCars, isLoading } = usePublicSiteCars();
+  const { currentCars, serviceCars, isLoading: isCarsLoading } = usePublicSiteCars();
+  const [latestPosts, setLatestPosts] = useState<any[]>([]);
+  const [isPostsLoading, setIsPostsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data } = await supabase
+          .from('posts')
+          .select('id, title, slug, cover_image, created_at')
+          .order('created_at', { ascending: false })
+          .limit(4);
+        if (data) setLatestPosts(data);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+      } finally {
+        setIsPostsLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,27 +51,6 @@ function HomeContent() {
     setCurrentBanner(
       (prev) => (prev - 1 + banners.length) % banners.length
     );
-
-  const news = [
-    {
-      img: "/news/imgi_21_1.jpg",
-      title:
-        "VINFAST CHÍNH THỨC NHẬN ĐẶT CỌC DÒNG XE VF 5 PLUS TẠI THỊ TRƯỜNG VIỆT NAM",
-    },
-    {
-      img: "/news/imgi_23_1.jpg",
-      title: "VINFAST VF 7 CHÍNH THỨC NHẬN ĐẶT HÀNG TỪ NGÀY 02/12",
-    },
-    {
-      img: "/news/imgi_24_z6030656124576_21079383d4ca1577cab231771bdd1f0d.jpg",
-      title: "THU CŨ ĐỔI MỚI CÙNG FGF - TỰ HÀO THƯƠNG HIỆU VIỆT",
-    },
-    {
-      img: "/news/imgi_26_5.jpg",
-      title:
-        "VINFAST ƯU ĐÃI LỚN CHO KHÁCH HÀNG TẠI VIỆT NAM NHÂN DỊP CUỐI NĂM",
-    },
-  ];
 
   return (
     <>
@@ -112,7 +112,7 @@ function HomeContent() {
             </p>
           </div>
 
-          {isLoading ? (
+          {isCarsLoading ? (
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E11D48]"></div>
             </div>
@@ -121,41 +121,41 @@ function HomeContent() {
               {currentCars.map((car, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-[16px] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100"
+                  className="bg-white rounded-[24px] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group border border-gray-100"
                 >
                   <Link
                     href={`/chi-tiet-xe/${car.slug || ""}`}
-                    className="w-full h-72 bg-white flex items-center justify-center p-2 relative overflow-hidden group-hover:bg-gray-50 transition-colors cursor-pointer"
+                    className="w-full aspect-[16/9] bg-white flex items-center justify-center p-6 relative overflow-hidden group-hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     <img
                       src={car.img}
                       alt={car.name}
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md"
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
                     />
                   </Link>
                   <div className="p-8 flex flex-col flex-1 border-t border-gray-50">
-                    <h3 className="text-[22px] font-bold text-[#0F172A] mb-3 uppercase tracking-wide">
-                      {car.name}
-                    </h3>
-                    <p className="text-[#334155] text-[15px] mb-6 line-clamp-2 leading-relaxed">
-                      {car.desc}
-                    </p>
-                    <div className="mt-auto">
-                      <p className="text-[#334155] text-[14px] mb-1 font-medium uppercase tracking-wider text-gray-500">
-                        Giá bán từ
-                      </p>
-                      <p className="text-[20px] font-bold text-[#E11D48] mb-8">
-                        {car.price}
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <Link
-                          href={`/chi-tiet-xe/${car.slug || ""}`}
-                          className="w-full text-center bg-[#E11D48] hover:bg-rose-700 text-white py-3 rounded-lg text-[15px] font-bold transition-all shadow-md hover:shadow-lg"
-                        >
-                          Xem chi tiết
-                        </Link>
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-[22px] font-bold text-[#0F172A] uppercase tracking-tighter">
+                        {car.name}
+                      </h3>
+                      <div className="text-right">
+                        <p className="text-[#64748B] text-[10px] font-bold uppercase tracking-widest mb-1">
+                          Giá từ
+                        </p>
+                        <p className="text-[18px] font-black text-[#E11D48]">
+                          {car.price}
+                        </p>
                       </div>
                     </div>
+                    <p className="text-[#475569] text-[14px] mb-8 line-clamp-2 leading-relaxed h-10">
+                      {car.desc}
+                    </p>
+                    <Link
+                      href={`/chi-tiet-xe/${car.slug || ""}`}
+                      className="w-full text-center bg-[#0F172A] group-hover:bg-[#E11D48] text-white py-3.5 rounded-xl text-[15px] font-bold transition-all shadow-lg hover:shadow-rose-200 uppercase tracking-widest"
+                    >
+                      Khám phá ngay
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -177,7 +177,7 @@ function HomeContent() {
             </p>
           </div>
 
-          {isLoading ? (
+          {isCarsLoading ? (
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E11D48]"></div>
             </div>
@@ -186,41 +186,41 @@ function HomeContent() {
               {serviceCars.map((car, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-[16px] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-200"
+                  className="bg-white rounded-[24px] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group border border-gray-100"
                 >
                   <Link
                     href={`/chi-tiet-xe/${car.slug || ""}`}
-                    className="w-full h-72 bg-gray-50 flex items-center justify-center p-2 relative overflow-hidden"
+                    className="w-full aspect-[16/9] bg-gray-50 flex items-center justify-center p-6 relative overflow-hidden"
                   >
                     <img
                       src={car.img}
                       alt={car.name}
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-sm"
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 drop-shadow-2xl"
                     />
                   </Link>
-                  <div className="p-8 flex flex-col flex-1">
-                    <h3 className="text-[20px] font-bold text-[#0F172A] mb-3 uppercase tracking-wide">
-                      {car.name}
-                    </h3>
-                    <p className="text-[#334155] text-[15px] mb-6 line-clamp-2 leading-relaxed">
-                      {car.desc}
-                    </p>
-                    <div className="mt-auto">
-                      <p className="text-[#334155] text-[14px] mb-1 font-medium uppercase tracking-wider text-gray-500">
-                        Giá bán từ
-                      </p>
-                      <p className="text-[20px] font-bold text-[#E11D48] mb-8">
-                        {car.price}
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <Link
-                          href={`/chi-tiet-xe/${car.slug || ""}`}
-                          className="w-full text-center bg-[#0F172A] hover:bg-slate-800 text-white py-3 rounded-lg text-[15px] font-bold transition-all shadow-md"
-                        >
-                          Xem chi tiết
-                        </Link>
+                  <div className="p-8 flex flex-col flex-1 border-t border-gray-50">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-[22px] font-bold text-[#0F172A] uppercase tracking-tighter">
+                        {car.name}
+                      </h3>
+                      <div className="text-right">
+                        <p className="text-[#64748B] text-[10px] font-bold uppercase tracking-widest mb-1">
+                          Giá từ
+                        </p>
+                        <p className="text-[18px] font-black text-[#E11D48]">
+                          {car.price}
+                        </p>
                       </div>
                     </div>
+                    <p className="text-[#475569] text-[14px] mb-8 line-clamp-2 leading-relaxed h-10">
+                      {car.desc}
+                    </p>
+                    <Link
+                      href={`/chi-tiet-xe/${car.slug || ""}`}
+                      className="w-full text-center bg-[#0F172A] group-hover:bg-[#E11D48] text-white py-3.5 rounded-xl text-[15px] font-bold transition-all shadow-lg hover:shadow-rose-200 uppercase tracking-widest"
+                    >
+                      Xem chi tiết
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -247,37 +247,42 @@ function HomeContent() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {news.map((item, index) => (
-              <Link
-                href="/chi-tiet-bai-viet"
-                key={index}
-                className="bg-white rounded-[16px] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group block border border-gray-100"
-              >
-                <div className="h-48 overflow-hidden relative">
-                  <img
-                    src={item.img}
-                    alt=""
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute top-4 left-4 bg-[#E11D48] text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-md">
-                    Tin tức
+            {isPostsLoading ? (
+               [1,2,3,4].map(i => (
+                 <div key={i} className="bg-white rounded-2xl h-80 animate-pulse"></div>
+               ))
+            ) : (
+              latestPosts.map((item, index) => (
+                <Link
+                  href={`/chi-tiet-bai-viet/${item.slug}`}
+                  key={index}
+                  className="bg-white rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group border border-gray-100"
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <img
+                      src={item.cover_image}
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#E11D48] text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm">
+                      Mới nhất
+                    </div>
                   </div>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 text-[13px] text-gray-500 mb-3 font-medium">
-                    <Calendar size={14} /> <span>11 Th12, 2023</span>
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 text-[12px] text-[#64748B] mb-3 font-bold uppercase tracking-widest">
+                      <Calendar size={14} className="text-[#E11D48]" /> <span>{new Date(item.created_at).toLocaleDateString('vi-VN')}</span>
+                    </div>
+                    <h4 className="text-[17px] font-bold text-[#0F172A] mb-4 group-hover:text-[#E11D48] transition-colors line-clamp-2 leading-snug uppercase tracking-tight h-12">
+                      {item.title}
+                    </h4>
+                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between text-[#E11D48] font-black text-[13px] uppercase tracking-widest">
+                      <span>Đọc tiếp</span>
+                      <ArrowRight size={16} className="transform group-hover:translate-x-2 transition-transform" />
+                    </div>
                   </div>
-                  <h4 className="text-[16px] font-bold text-[#0F172A] mb-4 group-hover:text-[#E11D48] transition-colors line-clamp-3 leading-snug">
-                    {item.title}
-                  </h4>
-                  <div className="mt-auto pt-4 border-t border-gray-100">
-                    <span className="text-[#E11D48] font-bold text-[14px] flex items-center gap-1 group-hover:gap-3 transition-all uppercase tracking-wide">
-                      Đọc tiếp <ArrowRight size={16} />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>

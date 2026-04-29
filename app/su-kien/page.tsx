@@ -159,27 +159,44 @@ export default function EventsPage() {
         </div>
 
         {/* Bài viết mới nhất section */}
-        <div className="mt-20 pt-16 border-t-2 border-gray-100">
-           <h3 className="text-2xl font-black text-black uppercase mb-10 border-b-2 border-gray-300 pb-2 relative inline-block">
-             BÀI VIẾT MỚI NHẤT
-             <span className="absolute bottom-[-2px] left-0 w-24 h-[2px] bg-[#c8102e]"></span>
-           </h3>
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-             {latestPosts.map((post: any, idx: number) => (
-               <div key={idx} className="group">
-                  <Link href={`/chi-tiet-bai-viet/${post.slug}`} className="block aspect-[4/3] overflow-hidden border border-gray-200 mb-4">
-                     <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </Link>
-                  <div className="flex items-center text-[12px] text-gray-500 mb-2 gap-2">
-                    <Calendar size={12} /> <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+         <div className="mt-20 pt-16 border-t-2 border-gray-100">
+            <h3 className="text-2xl font-black text-black uppercase mb-10 border-b-2 border-gray-300 pb-2 relative inline-block">
+              BÀI VIẾT MỚI NHẤT
+              <span className="absolute bottom-[-2px] left-0 w-24 h-[2px] bg-[#c8102e]"></span>
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {latestPosts.map((post: any, idx: number) => (
+                <Link
+                  href={`/chi-tiet-bai-viet/${post.slug}`}
+                  key={idx}
+                  className="bg-white rounded-[20px] shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group border border-gray-100"
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <img
+                      src={post.cover_image}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-[#c8102e] text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider shadow-sm">
+                      Mới nhất
+                    </div>
                   </div>
-                  <Link href={`/chi-tiet-bai-viet/${post.slug}`} className="font-bold text-lg text-black group-hover:text-[#c8102e] transition-colors line-clamp-2 uppercase leading-tight">
-                     {post.title}
-                  </Link>
-               </div>
-             ))}
-           </div>
-        </div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 text-[12px] text-[#64748B] mb-3 font-bold uppercase tracking-widest">
+                      <Calendar size={14} className="text-[#c8102e]" /> <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                    </div>
+                    <h4 className="text-[17px] font-bold text-[#0F172A] mb-4 group-hover:text-[#c8102e] transition-colors line-clamp-2 uppercase tracking-tight h-12 leading-snug">
+                      {post.title}
+                    </h4>
+                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between text-[#c8102e] font-black text-[13px] uppercase tracking-widest">
+                      <span>Đọc tiếp</span>
+                      <ChevronRight size={16} className="transform group-hover:translate-x-2 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+         </div>
       </main>
     </PublicPageShell>
   );

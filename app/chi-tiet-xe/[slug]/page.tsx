@@ -145,18 +145,32 @@ export default function CarDetail() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          <div className="border border-gray-200 p-4">
-            <img src={colors[selectedColor]?.image_url} alt={`Xe ${carData?.name}`} className="w-full h-auto object-contain" />
-            <div className="flex justify-center gap-4 mt-6 pb-4 flex-wrap">
-              {colors.map((color, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedColor(index)}
-                  title={color.color_name}
-                  className={`w-10 h-10 rounded-full border-[3px] transition-transform ${selectedColor === index ? 'border-[#c8102e] scale-110 shadow-md' : 'border-gray-200 hover:scale-105'}`}
-                  style={{ backgroundColor: color.hex_code }}
-                />
-              ))}
+          <div className="border border-gray-200 p-6 rounded-2xl bg-white shadow-sm">
+            <div className="relative aspect-[16/10] flex items-center justify-center overflow-hidden mb-8">
+              <img src={colors[selectedColor]?.image_url} alt={`Xe ${carData?.name}`} className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700" />
+            </div>
+            
+            <div className="border-t border-gray-100 pt-6">
+              <div className="text-center mb-4">
+                <h3 className="font-bold text-gray-900 uppercase tracking-widest text-[13px] mb-1">MÀU XE NGOẠI THẤT</h3>
+                <p className="text-[#c8102e] font-bold text-sm uppercase tracking-wide">
+                  {colors[selectedColor]?.color_name}
+                </p>
+              </div>
+              <div className="flex justify-center gap-3 flex-nowrap overflow-x-auto pb-2 no-scrollbar">
+                {colors.map((color, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedColor(index)}
+                    className="flex flex-col items-center shrink-0"
+                  >
+                    <div 
+                      className={`w-9 h-9 rounded-full border-2 transition-all duration-300 ${selectedColor === index ? 'border-[#c8102e] scale-110 shadow-md ring-2 ring-red-50' : 'border-gray-200 hover:border-gray-400'}`}
+                      style={{ backgroundColor: color.hex_code }}
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div>

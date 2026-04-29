@@ -14,16 +14,14 @@ export function PublicPageShell({
   className?: string;
 }) {
   return (
-    <PublicSiteCarsProvider>
-      <div
-        className={`min-h-screen ${className}`.trim()}
-        style={{ fontFamily: "'Times New Roman', Times, serif" }}
-      >
-        <PublicHeader />
-        {children}
-        <PublicFooter />
-        <PublicFloatingZalo />
-      </div>
-    </PublicSiteCarsProvider>
+    <div
+      className={`min-h-screen ${className}`.trim()}
+      style={{ fontFamily: "'Times New Roman', Times, serif" }}
+    >
+      <PublicHeader />
+      {children}
+      <PublicFooter />
+      <PublicFloatingZalo />
+    </div>
   );
 }
