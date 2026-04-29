@@ -134,7 +134,7 @@ function HomeContent() {
                     />
                   </Link>
                   <div className="p-8 flex flex-col flex-1 border-t border-gray-50">
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-6">
                       <h3 className="text-[22px] font-bold text-[#0F172A] uppercase tracking-tighter">
                         {car.name}
                       </h3>
@@ -147,9 +147,6 @@ function HomeContent() {
                         </p>
                       </div>
                     </div>
-                    <p className="text-[#475569] text-[14px] mb-8 line-clamp-2 leading-relaxed h-10">
-                      {car.desc}
-                    </p>
                     <Link
                       href={`/chi-tiet-xe/${car.slug || ""}`}
                       className="w-full text-center bg-[#0F172A] group-hover:bg-[#E11D48] text-white py-3.5 rounded-xl text-[15px] font-bold transition-all shadow-lg hover:shadow-rose-200 uppercase tracking-widest"
@@ -199,7 +196,7 @@ function HomeContent() {
                     />
                   </Link>
                   <div className="p-8 flex flex-col flex-1 border-t border-gray-50">
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-6">
                       <h3 className="text-[22px] font-bold text-[#0F172A] uppercase tracking-tighter">
                         {car.name}
                       </h3>
@@ -212,9 +209,6 @@ function HomeContent() {
                         </p>
                       </div>
                     </div>
-                    <p className="text-[#475569] text-[14px] mb-8 line-clamp-2 leading-relaxed h-10">
-                      {car.desc}
-                    </p>
                     <Link
                       href={`/chi-tiet-xe/${car.slug || ""}`}
                       className="w-full text-center bg-[#0F172A] group-hover:bg-[#E11D48] text-white py-3.5 rounded-xl text-[15px] font-bold transition-all shadow-lg hover:shadow-rose-200 uppercase tracking-widest"
