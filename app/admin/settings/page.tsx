@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { Save, Settings, Globe, Phone, Mail, MapPin, Share2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Save, Settings, Globe, Phone, Mail, MapPin, Share2, KeyRound } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
-  const [adminAccount, setAdminAccount] = useState({ username: '', password: '' });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isSavingAdmin, setIsSavingAdmin] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -18,31 +17,18 @@ export default function AdminSettings() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      // Fetch general settings
-      const { data: sData, error: sError } = await supabase
-        .from('settings')
-        .select('*')
-        .order('key');
+      const { data: sData, error: sError } = await supabase.from('settings').select('*').order('key');
       if (sError) throw sError;
       setSettings(sData || []);
-
-      // Fetch admin account
-      const { data: aData, error: aError } = await supabase
-        .from('admin_users')
-        .select('username, password')
-        .limit(1)
-        .single();
-      if (aError) throw aError;
-      setAdminAccount(aData);
     } catch (err) {
-      console.error("Lỗi fetch data:", err);
+      console.error('Lỗi fetch data:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleUpdateSetting = (key: string, value: string) => {
-    setSettings(prev => prev.map(s => s.key === key ? { ...s, value } : s));
+    setSettings((prev) => prev.map((s) => (s.key === key ? { ...s, value } : s)));
   };
 
   const handleSaveSettings = async () => {
@@ -55,38 +41,12 @@ export default function AdminSettings() {
           .eq('key', s.key);
         if (error) throw error;
       }
-      alert("Đã lưu cấu hình thành công!");
+      alert('Đã lưu cấu hình thành công!');
     } catch (err) {
-      alert("Lỗi khi lưu cấu hình");
+      alert('Lỗi khi lưu cấu hình');
       console.error(err);
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const handleSaveAdmin = async () => {
-    if (!adminAccount.username || !adminAccount.password) {
-      alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
-      return;
-    }
-    setIsSavingAdmin(true);
-    try {
-      const { error } = await supabase
-        .from('admin_users')
-        .update({ 
-          username: adminAccount.username, 
-          password: adminAccount.password,
-          updated_at: new Date() 
-        })
-        .eq('username', adminAccount.username); // Simplified, usually use ID
-      
-      if (error) throw error;
-      alert("Đã cập nhật tài khoản quản trị thành công!");
-    } catch (err) {
-      alert("Lỗi khi cập nhật tài khoản");
-      console.error(err);
-    } finally {
-      setIsSavingAdmin(false);
     }
   };
 
@@ -113,48 +73,13 @@ export default function AdminSettings() {
           <Settings className="h-5 w-5 shrink-0 text-blue-600 sm:h-6 sm:w-6" />
           Cấu hình website
         </h1>
-        <p className="mt-1 text-sm text-slate-500">Thông tin hiển thị công khai và tài khoản đăng nhập.</p>
-      </div>
-
-      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
-        <div className="flex flex-col gap-4 border-b border-slate-200/80 bg-slate-50/80 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-          <div>
-            <h2 className="font-semibold text-slate-900">Tài khoản quản trị</h2>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">Đổi tên đăng nhập và mật khẩu hệ thống.</p>
-          </div>
-          <button
-            type="button"
-            onClick={handleSaveAdmin}
-            disabled={isSavingAdmin}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700 disabled:opacity-50"
-          >
-            <Save size={16} /> {isSavingAdmin ? 'Đang lưu…' : 'Cập nhật tài khoản'}
-          </button>
-        </div>
-        <div className="grid grid-cols-1 gap-6 p-4 sm:p-8 md:grid-cols-2">
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">
-              Tên đăng nhập
-            </label>
-            <input
-              type="text"
-              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              value={adminAccount.username}
-              onChange={(e) => setAdminAccount({ ...adminAccount, username: e.target.value })}
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">
-              Mật khẩu mới
-            </label>
-            <input
-              type="text"
-              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              value={adminAccount.password}
-              onChange={(e) => setAdminAccount({ ...adminAccount, password: e.target.value })}
-            />
-          </div>
-        </div>
+        <p className="mt-1 text-sm text-slate-500">
+          Thông tin hiển thị công khai (hotline, mạng xã hội…).{' '}
+          <Link href="/admin/account" className="font-medium text-blue-600 hover:underline">
+            Đổi tài khoản / mật khẩu
+          </Link>{' '}
+          ở trang riêng.
+        </p>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
@@ -196,8 +121,15 @@ export default function AdminSettings() {
           <Globe size={18} /> Hướng dẫn
         </h3>
         <ul className="list-inside list-disc space-y-2 text-sm opacity-95">
-          <li>
-            <strong className="font-semibold">Tài khoản:</strong> Mật khẩu được lưu dạng văn bản (không mã hóa).
+          <li className="flex flex-wrap items-center gap-1">
+            <strong className="font-semibold">Tài khoản admin:</strong>
+            <Link
+              href="/admin/account"
+              className="inline-flex items-center gap-1 font-medium text-blue-700 underline-offset-2 hover:underline"
+            >
+              <KeyRound className="h-3.5 w-3.5" />
+              Tài khoản đăng nhập
+            </Link>
           </li>
           <li>
             <strong className="font-semibold">Site Name:</strong> Tên hiển thị cạnh logo (header).
