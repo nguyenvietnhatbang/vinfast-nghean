@@ -61,8 +61,8 @@ export function PublicFooter() {
   const phoneNumber = settings.phone_number || "0961.194.881";
   const zaloLink = settings.zalo_link || `https://zalo.me/${phoneNumber.replace(/\./g, '')}`;
   const email = settings.email || "vinfastnghean1@gmail.com";
-  const address = settings.address || "Tầng 1, Chung Cư A1, Phường Quang Trung, TP. Vinh, Nghệ An";
-  const siteName = settings.site_name || "VinFast Hoàn";
+  const address = settings.address || "Số 79 Đại lộ Lê Nin, Tp. Vinh, Nghệ An";
+  const siteName = settings.site_name || "VinFast Nghệ An";
 
   return (
     <footer className="bg-[#0F172A] text-slate-300 py-16 md:py-24 border-t-4 border-[#E11D48]">

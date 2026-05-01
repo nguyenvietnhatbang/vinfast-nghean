@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VinFast Hoàn - Đại lý ủy quyền VinFast chính thức tại Nghệ An",
-  description: "VinFast Hoàn - Cung cấp các dòng xe điện VinFast chính hãng: VF 3, VF 5, VF 6, VF 7, VF 8, VF 9. Dịch vụ bảo hành, bảo dưỡng chuyên nghiệp.",
+  title: "VinFast Nghệ An - Đại lý ủy quyền VinFast chính thức tại Nghệ An",
+  description: "VinFast Nghệ An - Cung cấp các dòng xe điện VinFast chính hãng: VF 3, VF 5, VF 6, VF 7, VF 8, VF 9. Dịch vụ bảo hành, bảo dưỡng chuyên nghiệp.",
 };
 
 import { PublicSiteCarsProvider } from "@/components/public/public-site-cars-context";

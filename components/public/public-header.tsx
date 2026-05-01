@@ -16,7 +16,7 @@ export function PublicHeader() {
   const { currentCars, serviceCars, settings } = usePublicSiteCars();
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const siteName = settings.site_name || "VinFast Hoàn";
+  const siteName = settings.site_name || "VinFast Nghệ An";
   const phoneNumber = settings.phone_number || "0961.194.881";
   const zaloLink = settings.zalo_link || `https://zalo.me/${phoneNumber.replace(/\./g, '')}`;
   const email = settings.email || "vinfastnghean1@gmail.com";
