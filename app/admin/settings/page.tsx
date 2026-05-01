@@ -98,94 +98,118 @@ export default function AdminSettings() {
     return <Globe size={18} />;
   };
 
-  if (isLoading) return <div className="p-8 text-center font-bold">Đang tải cấu hình...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-16">
+        <p className="text-sm font-medium text-slate-500">Đang tải cấu hình…</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-12 max-w-4xl mx-auto pb-20">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Settings className="text-blue-600" /> Cấu hình Website
+    <div className="mx-auto max-w-4xl space-y-8 pb-12 sm:space-y-10 sm:pb-20">
+      <div>
+        <h1 className="flex flex-wrap items-center gap-2 text-lg font-semibold text-slate-900 sm:text-xl">
+          <Settings className="h-5 w-5 shrink-0 text-blue-600 sm:h-6 sm:w-6" />
+          Cấu hình website
         </h1>
+        <p className="mt-1 text-sm text-slate-500">Thông tin hiển thị công khai và tài khoản đăng nhập.</p>
       </div>
 
-      {/* Account Settings */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-           <div>
-             <h2 className="font-bold text-gray-700">Tài khoản quản trị</h2>
-             <p className="text-xs text-gray-500 mt-1">Thay đổi tên đăng nhập và mật khẩu hệ thống.</p>
-           </div>
-           <button 
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-slate-200/80 bg-slate-50/80 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div>
+            <h2 className="font-semibold text-slate-900">Tài khoản quản trị</h2>
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">Đổi tên đăng nhập và mật khẩu hệ thống.</p>
+          </div>
+          <button
+            type="button"
             onClick={handleSaveAdmin}
             disabled={isSavingAdmin}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-red-700 transition disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-red-700 disabled:opacity-50"
           >
-            <Save size={16} /> {isSavingAdmin ? "Đang lưu..." : "Cập nhật tài khoản"}
+            <Save size={16} /> {isSavingAdmin ? 'Đang lưu…' : 'Cập nhật tài khoản'}
           </button>
         </div>
-        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="space-y-2">
-              <label className="text-sm font-black text-gray-700 uppercase tracking-wider">Tên đăng nhập</label>
-              <input 
-                type="text"
-                className="w-full border border-gray-300 rounded-xl p-3 text-black font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white shadow-sm"
-                value={adminAccount.username}
-                onChange={(e) => setAdminAccount({...adminAccount, username: e.target.value})}
-              />
-           </div>
-           <div className="space-y-2">
-              <label className="text-sm font-black text-gray-700 uppercase tracking-wider">Mật khẩu mới</label>
-              <input 
-                type="text"
-                className="w-full border border-gray-300 rounded-xl p-3 text-black font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white shadow-sm"
-                value={adminAccount.password}
-                onChange={(e) => setAdminAccount({...adminAccount, password: e.target.value})}
-              />
-           </div>
+        <div className="grid grid-cols-1 gap-6 p-4 sm:p-8 md:grid-cols-2">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              Tên đăng nhập
+            </label>
+            <input
+              type="text"
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              value={adminAccount.username}
+              onChange={(e) => setAdminAccount({ ...adminAccount, username: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              Mật khẩu mới
+            </label>
+            <input
+              type="text"
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              value={adminAccount.password}
+              onChange={(e) => setAdminAccount({ ...adminAccount, password: e.target.value })}
+            />
+          </div>
         </div>
       </div>
 
-      {/* General Settings */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-           <div>
-             <h2 className="font-bold text-gray-700">Thông tin chung & Liên hệ</h2>
-             <p className="text-xs text-gray-500 mt-1">Các thông tin này sẽ hiển thị trên toàn bộ Website.</p>
-           </div>
-           <button 
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+        <div className="flex flex-col gap-4 border-b border-slate-200/80 bg-slate-50/80 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div>
+            <h2 className="font-semibold text-slate-900">Thông tin chung &amp; liên hệ</h2>
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">Hiển thị trên toàn bộ website.</p>
+          </div>
+          <button
+            type="button"
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-blue-700 transition disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-50"
           >
-            <Save size={16} /> {isSaving ? "Đang lưu..." : "Lưu cấu hình"}
+            <Save size={16} /> {isSaving ? 'Đang lưu…' : 'Lưu cấu hình'}
           </button>
         </div>
-        
-        <div className="p-8 space-y-8">
-           {settings.map((s) => (
-             <div key={s.key} className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-black text-gray-700 uppercase tracking-wider">
-                   {getIcon(s.key)} {s.description || s.key}
-                </div>
-                <input 
-                  type="text"
-                  className="w-full border border-gray-300 rounded-xl p-3 text-black font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white shadow-sm"
-                  value={s.value}
-                  onChange={(e) => handleUpdateSetting(s.key, e.target.value)}
-                />
-             </div>
-           ))}
+
+        <div className="space-y-6 p-4 sm:p-8 sm:space-y-8">
+          {settings.map((s) => (
+            <div key={s.key} className="space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <span className="text-slate-500">{getIcon(s.key)}</span>
+                {s.description || s.key}
+              </div>
+              <input
+                type="text"
+                className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-medium text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                value={s.value}
+                onChange={(e) => handleUpdateSetting(s.key, e.target.value)}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100 text-blue-800">
-         <h3 className="font-bold mb-2 flex items-center gap-2"><Globe size={18}/> Hướng dẫn</h3>
-         <ul className="text-sm space-y-2 list-disc list-inside opacity-90">
-            <li><strong>Tài khoản:</strong> Mật khẩu được lưu trực tiếp dưới dạng văn bản (không mã hóa).</li>
-            <li><strong>Site Name:</strong> Tên hiển thị cạnh Logo (Header).</li>
-            <li><strong>Phone Number:</strong> Số Hotline chính, hiển thị ở nút gọi và Top Bar.</li>
-            <li><strong>Zalo Link:</strong> Phải có định dạng <code>https://zalo.me/so_dien_thoai</code>.</li>
-         </ul>
+      <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-4 text-blue-900 sm:p-6">
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold sm:text-base">
+          <Globe size={18} /> Hướng dẫn
+        </h3>
+        <ul className="list-inside list-disc space-y-2 text-sm opacity-95">
+          <li>
+            <strong className="font-semibold">Tài khoản:</strong> Mật khẩu được lưu dạng văn bản (không mã hóa).
+          </li>
+          <li>
+            <strong className="font-semibold">Site Name:</strong> Tên hiển thị cạnh logo (header).
+          </li>
+          <li>
+            <strong className="font-semibold">Phone Number:</strong> Hotline, hiển thị ở nút gọi và thanh trên.
+          </li>
+          <li>
+            <strong className="font-semibold">Zalo Link:</strong> Định dạng{' '}
+            <code className="rounded bg-white/60 px-1 py-0.5 text-xs">https://zalo.me/so_dien_thoai</code>.
+          </li>
+        </ul>
       </div>
     </div>
   );

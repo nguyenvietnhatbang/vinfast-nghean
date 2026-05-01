@@ -76,74 +76,108 @@ export default function RegistrationsAdmin() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Quản lý liên hệ & Đăng ký</h1>
-        <div className="relative">
-           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-           <input 
-             type="text" 
-             placeholder="Tìm tên, SĐT, dòng xe..." 
-             className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-black font-medium"
-             value={searchTerm}
-             onChange={(e) => setSearchTerm(e.target.value)}
-           />
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h1 className="text-lg font-semibold text-slate-900 sm:text-xl">Quản lý liên hệ &amp; đăng ký</h1>
+          <p className="mt-0.5 text-sm text-slate-500">Theo dõi lái thử và form liên hệ.</p>
+        </div>
+        <div className="relative w-full sm:max-w-xs lg:w-72 lg:max-w-none lg:shrink-0">
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+            size={18}
+            aria-hidden
+          />
+          <input
+            type="search"
+            placeholder="Tìm tên, SĐT, dòng xe…"
+            className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm font-medium text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b border-gray-200">
+          <table className="w-full min-w-[900px] text-left">
+            <thead className="border-b border-slate-200/80 bg-slate-50/80">
               <tr>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Ngày đăng ký</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Khách hàng</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Liên hệ</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Loại yêu cầu</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Dòng xe</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600">Trạng thái</th>
-                <th className="px-6 py-4 text-sm font-bold text-gray-600 text-right">Thao tác</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Ngày đăng ký
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Khách hàng
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Liên hệ
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Loại yêu cầu
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Dòng xe
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Trạng thái
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 sm:px-6 sm:py-4">
+                  Thao tác
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {isLoading ? (
-                <tr><td colSpan={7} className="px-6 py-10 text-center text-gray-500 font-bold">Đang tải dữ liệu...</td></tr>
+                <tr>
+                  <td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-500 sm:px-6">
+                    Đang tải dữ liệu…
+                  </td>
+                </tr>
               ) : filteredRegistrations.length === 0 ? (
-                <tr><td colSpan={7} className="px-6 py-10 text-center text-gray-500 font-bold">Chưa có yêu cầu nào.</td></tr>
+                <tr>
+                  <td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-500 sm:px-6">
+                    Chưa có yêu cầu nào.
+                  </td>
+                </tr>
               ) : (
                 filteredRegistrations.map((reg) => (
-                  <tr key={reg.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">
+                  <tr key={reg.id} className="transition-colors hover:bg-slate-50/80">
+                    <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-700 sm:px-6 sm:py-4">
                       {new Date(reg.created_at).toLocaleString('vi-VN')}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="font-black text-black">{reg.full_name}</div>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                      <div className="font-semibold text-slate-900">{reg.full_name}</div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-bold text-blue-700">{reg.phone}</div>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                      <div className="text-sm font-medium text-blue-700">{reg.phone}</div>
                     </td>
-                    <td className="px-6 py-4">
-                       <span className={`px-2 py-0.5 rounded text-[11px] font-black uppercase ${reg.type === 'Lái thử' ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700'}`}>
-                         {reg.type}
-                       </span>
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">
+                      <span
+                        className={`inline-flex rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase ${
+                          reg.type === 'Lái thử'
+                            ? 'bg-amber-100 text-amber-800'
+                            : 'bg-violet-100 text-violet-800'
+                        }`}
+                      >
+                        {reg.type}
+                      </span>
                     </td>
-                    <td className="px-6 py-4 text-sm font-black text-black">
+                    <td className="px-4 py-3 text-sm font-medium text-slate-900 sm:px-6 sm:py-4">
                       {reg.car_model}
                     </td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(reg.status)}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button 
+                    <td className="px-4 py-3 sm:px-6 sm:py-4">{getStatusBadge(reg.status)}</td>
+                    <td className="px-4 py-3 text-right sm:px-6 sm:py-4">
+                      <div className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
+                        <button
+                          type="button"
                           onClick={() => setSelectedReg(reg)}
-                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-blue-600 transition-colors hover:bg-blue-50"
                           title="Xem chi tiết"
                         >
                           <Eye size={18} />
                         </button>
-                        <select 
-                          className="text-xs border-2 border-gray-300 rounded px-1 py-1 focus:outline-none font-black text-black bg-white"
+                        <select
+                          className="max-w-[7.5rem] rounded-md border border-slate-200 bg-white px-1.5 py-1 text-xs font-semibold text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                           value={reg.status}
                           onChange={(e) => updateStatus(reg.id, e.target.value)}
                         >
@@ -151,9 +185,10 @@ export default function RegistrationsAdmin() {
                           <option value="Đã liên hệ">Đã liên hệ</option>
                           <option value="Hủy">Hủy</option>
                         </select>
-                        <button 
+                        <button
+                          type="button"
                           onClick={() => deleteRegistration(reg.id)}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-50"
                         >
                           <Trash2 size={18} />
                         </button>
@@ -169,18 +204,23 @@ export default function RegistrationsAdmin() {
 
       {/* Detail Modal */}
       {selectedReg && (
-        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
-           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
-              <div className="bg-blue-600 px-6 py-4 flex justify-between items-center text-white">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="flex max-h-[min(90vh,100dvh)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200/80">
+            <div className="flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-4 text-white sm:px-6">
                  <h2 className="text-xl font-bold uppercase flex items-center gap-2">
                     <FileText size={20} /> Chi tiết yêu cầu
                  </h2>
-                 <button onClick={() => setSelectedReg(null)} className="hover:bg-white/20 p-1 rounded-full transition-colors">
-                    <X size={24} />
-                 </button>
-              </div>
-              
-              <div className="p-8 overflow-y-auto space-y-8">
+              <button
+                type="button"
+                onClick={() => setSelectedReg(null)}
+                className="rounded-lg p-2 transition-colors hover:bg-white/15"
+                aria-label="Đóng"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <div className="space-y-6 overflow-y-auto p-4 sm:p-8 sm:space-y-8">
                  {/* Khách hàng */}
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
@@ -233,34 +273,35 @@ export default function RegistrationsAdmin() {
                     </div>
                  </div>
 
-                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                    <div className="text-xs text-gray-500 font-medium italic">
-                       Ngày đăng ký: {new Date(selectedReg.created_at).toLocaleString('vi-VN')}
-                    </div>
-                    <div className="flex items-center gap-3">
-                       <span className="text-sm font-bold text-gray-700">Trạng thái:</span>
-                       <select 
-                          className="border-2 border-gray-300 rounded-lg px-3 py-1.5 font-black text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          value={selectedReg.status}
-                          onChange={(e) => updateStatus(selectedReg.id, e.target.value)}
-                        >
-                          <option value="Mới">Mới</option>
-                          <option value="Đã liên hệ">Đã liên hệ</option>
-                          <option value="Hủy">Hủy</option>
-                        </select>
-                    </div>
-                 </div>
+              <div className="flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-xs font-medium italic text-slate-500">
+                  Ngày đăng ký: {new Date(selectedReg.created_at).toLocaleString('vi-VN')}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-semibold text-slate-700">Trạng thái:</span>
+                  <select
+                    className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    value={selectedReg.status}
+                    onChange={(e) => updateStatus(selectedReg.id, e.target.value)}
+                  >
+                    <option value="Mới">Mới</option>
+                    <option value="Đã liên hệ">Đã liên hệ</option>
+                    <option value="Hủy">Hủy</option>
+                  </select>
+                </div>
               </div>
+            </div>
 
-              <div className="bg-gray-50 px-6 py-4 flex justify-end">
-                 <button 
-                   onClick={() => setSelectedReg(null)}
-                   className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-bold hover:bg-gray-300 transition-colors"
-                 >
-                    Đóng
-                 </button>
-              </div>
-           </div>
+            <div className="flex justify-end border-t border-slate-100 bg-slate-50/80 px-4 py-3 sm:px-6">
+              <button
+                type="button"
+                onClick={() => setSelectedReg(null)}
+                className="rounded-lg bg-slate-200 px-5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
