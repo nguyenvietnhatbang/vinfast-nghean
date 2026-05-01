@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -10,14 +11,31 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
-    // Hardcoded check
-    if (username === 'admin' && password === 'admin123') {
-      router.push('/admin');
-    } else {
-      setError('Tên đăng nhập hoặc mật khẩu không chính xác.');
+    try {
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .single();
+
+      if (error || !data) {
+        setError('Tên đăng nhập hoặc mật khẩu không chính xác.');
+      } else {
+        localStorage.setItem('adminSession', JSON.stringify({
+          isLoggedIn: true,
+          username: data.username,
+          loginTime: new Date().getTime()
+        }));
+        router.push('/admin');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Đã xảy ra lỗi kết nối. Vui lòng thử lại.');
     }
   };
 

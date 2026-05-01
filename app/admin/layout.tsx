@@ -1,11 +1,37 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { LayoutDashboard, Car, LogOut, FileText, Mail, Settings } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    const session = localStorage.getItem('adminSession');
+    if (!session) {
+      router.push('/login');
+    } else {
+      try {
+        const parsed = JSON.parse(session);
+        if (parsed.isLoggedIn) {
+          setIsAuthorized(true);
+        } else {
+          router.push('/login');
+        }
+      } catch (e) {
+        router.push('/login');
+      }
+    }
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminSession');
+    router.push('/login');
+  };
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -15,6 +41,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Quản lý Brochure', href: '/admin/brochures', icon: FileText },
     { name: 'Cấu hình Website', href: '/admin/settings', icon: Settings },
   ];
+
+  if (!isAuthorized) {
+    return <div className="min-h-screen bg-gray-100 flex items-center justify-center font-bold">Đang kiểm tra quyền truy cập...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -42,13 +72,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </div>
         <div className="p-4 border-t border-gray-200">
-          <Link
-            href="/login"
-            className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors"
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors"
           >
             <LogOut size={20} />
             Đăng xuất
-          </Link>
+          </button>
         </div>
       </div>
 
