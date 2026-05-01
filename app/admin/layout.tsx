@@ -13,7 +13,6 @@ import {
   Menu,
   X,
   BookOpen,
-  KeyRound,
 } from 'lucide-react';
 
 const ADMIN_NAV = [
@@ -22,7 +21,6 @@ const ADMIN_NAV = [
   { name: 'Quản lý bài viết', href: '/admin/posts', icon: FileText },
   { name: 'Quản lý liên hệ', href: '/admin/registrations', icon: Mail },
   { name: 'Quản lý Brochure', href: '/admin/brochures', icon: BookOpen },
-  { name: 'Tài khoản đăng nhập', href: '/admin/account', icon: KeyRound },
   { name: 'Cấu hình Website', href: '/admin/settings', icon: Settings },
 ] as const;
 
