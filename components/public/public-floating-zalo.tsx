@@ -11,10 +11,10 @@ export function PublicFloatingZalo() {
     settings.zalo_link || `https://zalo.me/${phoneDigits || phoneNumber.replace(/\./g, "")}`;
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex flex-col gap-3">
+    <>
       <a
         href={phoneDigits ? `tel:${phoneDigits}` : `tel:${phoneNumber}`}
-        className="flex items-center group cursor-pointer"
+        className="fixed bottom-6 left-6 z-50 flex items-center group cursor-pointer"
         aria-label={`Gọi ${phoneNumber}`}
       >
         <div className="bg-[#E11D48] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-10 hover:bg-rose-700 transition-colors">
@@ -29,7 +29,7 @@ export function PublicFloatingZalo() {
         href={zaloLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center group cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 flex items-center group cursor-pointer"
         aria-label="Mở Zalo"
       >
         <div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-10 border border-slate-200 hover:border-slate-300 transition-colors overflow-hidden">
@@ -45,6 +45,6 @@ export function PublicFloatingZalo() {
           Zalo
         </div>
       </a>
-    </div>
+    </>
   );
 }
