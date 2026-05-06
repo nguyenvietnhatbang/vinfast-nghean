@@ -14,13 +14,13 @@ export function PublicFloatingZalo() {
     <>
       <a
         href={phoneDigits ? `tel:${phoneDigits}` : `tel:${phoneNumber}`}
-        className="fixed bottom-1 left-1 z-50 flex items-center group cursor-pointer"
+        className="fixed bottom-0 left-0 z-50 flex items-center group cursor-pointer"
         aria-label={`Gọi ${phoneNumber}`}
       >
-        <div className="bg-[#E11D48] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl z-10 hover:bg-rose-700 transition-colors">
+        <div className="bg-[#E11D48] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-10 hover:bg-rose-700 transition-colors">
           <Phone size={24} className="fill-current" />
         </div>
-        <div className="bg-[#E11D48] text-white font-bold px-5 py-2.5 rounded-r-full -ml-6 pr-8 shadow-xl transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0">
+        <div className="bg-[#E11D48] text-white font-bold px-5 py-2.5 rounded-r-full -ml-4 pr-8 shadow-md transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0">
           {phoneNumber}
         </div>
       </a>
@@ -32,7 +32,10 @@ export function PublicFloatingZalo() {
         className="fixed bottom-0 right-0 z-50 flex items-center group cursor-pointer"
         aria-label="Mở Zalo"
       >
-        <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center shadow-2xl z-10 border border-slate-200 hover:border-slate-300 transition-colors overflow-hidden">
+        <div className="bg-[#0F172A] text-white font-bold px-5 py-2.5 rounded-l-full -mr-4 pl-8 shadow-md transform translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0 order-1">
+          Zalo
+        </div>
+        <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center shadow-lg z-10 border border-slate-200 hover:border-slate-300 transition-colors overflow-hidden order-2">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/3840px-Icon_of_Zalo.svg.png"
             alt="Zalo"
@@ -40,9 +43,6 @@ export function PublicFloatingZalo() {
             loading="lazy"
             referrerPolicy="no-referrer"
           />
-        </div>
-        <div className="bg-[#0F172A] text-white font-bold px-5 py-2.5 rounded-r-full -ml-12 pr-8 shadow-xl transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0">
-          Zalo
         </div>
       </a>
     </>

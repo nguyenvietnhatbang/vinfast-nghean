@@ -81,7 +81,7 @@ export function PublicHeader() {
               />
             </div>
             <div className="flex flex-col justify-center">
-              <span className="text-2xl font-black uppercase tracking-widest text-black font-[family-name:var(--font-montserrat)]">
+              <span className="text-2xl font-bold uppercase tracking-wider text-black">
                 {siteName}
               </span>
             </div>
@@ -168,7 +168,7 @@ export function PublicHeader() {
         className={`fixed top-0 right-0 h-full w-[280px] bg-white z-[70] shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <span className="font-black text-lg tracking-widest font-[family-name:var(--font-montserrat)]">MENU</span>
+          <span className="font-bold text-lg">MENU</span>
           <button onClick={() => setIsMenuOpen(false)} className="p-2">
             <X size={24} />
           </button>
@@ -212,7 +212,7 @@ export function PublicHeader() {
         </div>
 
         <div className="p-6 bg-gray-50 border-t">
-          <a href={`tel:${phoneNumber}`} className="flex items-center gap-3 text-[#c8102e] font-black tracking-wider font-[family-name:var(--font-montserrat)]">
+          <a href={`tel:${phoneNumber}`} className="flex items-center gap-3 text-[#c8102e] font-bold">
             <Phone size={18} fill="currentColor" />
             {phoneNumber}
           </a>
