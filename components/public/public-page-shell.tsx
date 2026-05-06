@@ -14,10 +14,7 @@ export function PublicPageShell({
   className?: string;
 }) {
   return (
-    <div
-      className={`min-h-screen ${className}`.trim()}
-      style={{ fontFamily: "'Times New Roman', Times, serif" }}
-    >
+    <div className={`min-h-screen ${className}`.trim()}>
       <PublicHeader />
       {children}
       <PublicFooter />
