@@ -17,10 +17,10 @@ export function PublicFloatingZalo() {
         className="fixed bottom-0 left-0 z-50 flex items-center group cursor-pointer"
         aria-label={`Gọi ${phoneNumber}`}
       >
-        <div className="bg-[#E11D48] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-10 hover:bg-rose-700 transition-colors">
-          <Phone size={24} className="fill-current" />
+        <div className="bg-[#E11D48] text-white w-20 h-20 rounded-full flex items-center justify-center shadow-lg z-10 hover:bg-rose-700 transition-colors">
+          <Phone size={32} className="fill-current" />
         </div>
-        <div className="bg-[#E11D48] text-white font-bold px-5 py-2.5 rounded-r-full -ml-4 pr-8 shadow-md transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0">
+        <div className="bg-[#E11D48] text-white font-bold px-5 py-2.5 rounded-r-full -ml-8 pr-8 shadow-md transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out z-0">
           {phoneNumber}
         </div>
       </a>
