@@ -277,16 +277,21 @@ export default function CarDetail() {
                 }
                 setIsSubmittingLead(true);
                 try {
-                  const { error } = await supabase.from('lead_registrations').insert([{
-                    full_name: leadForm.name,
-                    phone: leadForm.phone,
-                    email: leadForm.email,
-                    notes: leadForm.notes || carData?.name,
-                    car_model: carData?.name,
-                    type: 'Nhận thông tin',
-                    status: 'Mới'
-                  }]);
-                  if (error) throw error;
+                  const res = await fetch("/api/lead", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      type: "Nhận thông tin",
+                      fullName: leadForm.name,
+                      phone: leadForm.phone,
+                      email: leadForm.email,
+                      notes: leadForm.notes || carData?.name,
+                      carModel: carData?.name,
+                    }),
+                  });
+
+                  const data = await res.json().catch(() => ({}));
+                  if (!res.ok) throw new Error(data?.error || "Request failed");
                   alert("Gửi thông tin thành công! Chúng tôi sẽ sớm liên hệ lại.");
                   setShowModal(false);
                   setLeadForm({ name: "", phone: "", email: "", notes: "" });

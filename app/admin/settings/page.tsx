@@ -206,6 +206,9 @@ export default function AdminSettings() {
             <strong className="font-semibold">Phone Number:</strong> Hotline, hiển thị ở nút gọi và thanh trên.
           </li>
           <li>
+            <strong className="font-semibold">Email:</strong> Địa chỉ <strong className="font-semibold">nhận</strong> thông tin đăng ký lái thử / tư vấn từ khách.
+          </li>
+          <li>
             <strong className="font-semibold">Zalo Link:</strong> Định dạng{' '}
             <code className="rounded bg-white/60 px-1 py-0.5 text-xs">https://zalo.me/so_dien_thoai</code>.
           </li>

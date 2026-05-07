@@ -37,20 +37,22 @@ export default function TestDriveRegistrationPage() {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('lead_registrations').insert([
-        {
-          full_name: formData.fullName,
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "Lái thử",
+          fullName: formData.fullName,
           phone: formData.phone,
           address: formData.address,
-          car_model: formData.carType,
-          type: 'Lái thử',
-          has_license: formData.hasLicense,
+          carModel: formData.carType,
+          hasLicense: formData.hasLicense,
           notes: formData.notes,
-          status: 'Mới'
-        }
-      ]);
+        }),
+      });
 
-      if (error) throw error;
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Request failed");
 
       alert("Đăng ký lái thử thành công! Chúng tôi sẽ sớm liên hệ với bạn.");
       setFormData({
