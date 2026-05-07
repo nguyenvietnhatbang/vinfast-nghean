@@ -76,6 +76,80 @@ function buildEmailText(payload: LeadPayload) {
   return lines.join("\n");
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function row(label: string, value?: string) {
+  if (!value) return "";
+  return `
+    <tr>
+      <td style="padding:10px 12px;border-top:1px solid #e5e7eb;width:160px;color:#6b7280;font-weight:600;vertical-align:top">${escapeHtml(label)}</td>
+      <td style="padding:10px 12px;border-top:1px solid #e5e7eb;color:#111827">${escapeHtml(value)}</td>
+    </tr>
+  `.trim();
+}
+
+function buildEmailHtml(payload: LeadPayload) {
+  const createdAt = new Date().toLocaleString("vi-VN");
+  const notes =
+    payload.notes?.trim() ? payload.notes.trim() : "(không có nội dung thêm)";
+
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lead mới</title>
+  </head>
+  <body style="margin:0;background:#f3f4f6;padding:24px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji'">
+    <div style="max-width:720px;margin:0 auto">
+      <div style="background:#111827;color:#fff;border-radius:14px 14px 0 0;padding:18px 20px">
+        <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.85">Website</div>
+        <div style="font-size:18px;font-weight:800;margin-top:4px">Có đăng ký mới: ${escapeHtml(
+          payload.type
+        )}</div>
+      </div>
+
+      <div style="background:#fff;border-radius:0 0 14px 14px;overflow:hidden;border:1px solid #e5e7eb;border-top:none">
+        <div style="padding:18px 20px">
+          <div style="font-size:14px;color:#6b7280">Khách hàng</div>
+          <div style="font-size:22px;font-weight:800;color:#111827;margin-top:4px">${escapeHtml(
+            payload.fullName
+          )}</div>
+          <div style="margin-top:10px">
+            <a href="tel:${escapeHtml(
+              payload.phone
+            )}" style="display:inline-block;background:#dc2626;color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:10px">Gọi: ${escapeHtml(
+              payload.phone
+            )}</a>
+          </div>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          ${row("Số điện thoại", payload.phone)}
+          ${row("Email", payload.email)}
+          ${row("Địa chỉ", payload.address)}
+          ${row("Dòng xe", payload.carModel)}
+          ${row("Bằng lái", payload.hasLicense)}
+          ${row("Thời gian", createdAt)}
+          ${row("Nội dung", notes)}
+        </table>
+
+        <div style="padding:14px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;color:#6b7280;font-size:12px">
+          Email này được gửi tự động từ website.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>`;
+}
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -158,6 +232,7 @@ export async function POST(req: Request) {
       replyTo: payload.email || undefined,
       subject: `[Website] ${payload.type} - ${payload.fullName} (${payload.phone})`,
       text: buildEmailText(payload),
+      html: buildEmailHtml(payload),
     });
   } catch (e) {
     console.error("Failed to send email:", e);
